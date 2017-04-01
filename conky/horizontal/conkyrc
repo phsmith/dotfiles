@@ -1,0 +1,32 @@
+own_window true
+own_window_type normal
+own_window_transparent true
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+own_window_argb_visual false
+own_window_argb_value 0
+
+alignment bottom_left
+background no
+gap_y 36
+gap_x 0
+minimum_size 1920 28
+maximum_width 1920
+
+default_color ffffff
+color1 909090
+#color1 797979
+color2 355d9a
+border_width 4
+
+use_xft yes
+xftfont Continuum Medium:size=10
+
+#Paramètres de configuration
+update_interval 1
+double_buffer yes
+short_units yes
+format_human_readable yes
+
+TEXT
+${image ~/.conky/horizontal/conkybg-dark.png -p -2000,-1 -s 5000x38}
+           ${offset 120}${voffset -17}Updates: ${color1}${texeci 14400 sudo ~/.conky/scripts/arch-updates -sn} ${color}   |    Kernel: ${color1}$kernel $machine ${color}  |  Uptime: ${color1}$uptime_short ${color}  |  CPU: ${color1}${cpu cpu0}% ${color}  |  Temperature(ºC): ${color1}${hwmon 2 temp 1} - ${hwmon 2 temp 2} - ${hwmon 2 temp 3} - ${hwmon 2 temp 4} - ${hwmon 2 temp 5} ${color}  |  Mem: ${color1}$mem/$memmax ${color}  |  Root: ${color1}${fs_used /root}/${fs_size /root} ${color}  |  Home: ${color1}${fs_used /home}/${fs_size /home} ${color}  |  Data: ${color1}${fs_used /media/HD1.5T}/${fs_size /media/HD1.5T}${color} ${color}  |  IP: ${color1}${addr wlan0}${color}  |  Down: ${color1}${alignc}${downspeedf wlan0}(${totaldown wlan0}) ${color}  |  Up: ${color1}${upspeedf wlan0}(${totalup wlan0}) ${color}

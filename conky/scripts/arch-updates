@@ -1,0 +1,62 @@
+#!/bin/bash
+#
+# Description: Simple Archlinux updates notification for conky
+#              Based on archup project.
+#
+# Author: Phillipe Smith ( SmithuX ) 
+# Mail: <phillipe@archlinux.com.br>
+# Version: 1.1
+#
+
+# Updates message
+updatesMsg="Novas atualizações disponíveis!"
+
+function usage() {
+echo "usage: $(basename $0) <options>
+
+Options:
+    -n     ->    Only show pacman updates notification
+    -sn    ->    Sync pacman packages database and
+                 show a notification with the updates available
+                 (You must be root to sync pacman database)
+"
+exit
+}
+
+# If the script is executed by root, then pacman will sync packages database
+# This is useful if you want to use the script with cron
+function checkUpdates() {
+    if [ $UID -ne 0 ]; then
+        usage
+    else
+        [ -z $(pidof pacman) ] && /usr/bin/pacman -Sy > /dev/null
+    fi
+}
+
+function  showUpdatesNotification() {    
+    # Message to be showed on the desktop notification
+    updateNotifyMessage="$1"
+
+    # Pacman command to check updates
+    pacUpdates=$(pacman -Sup --print-format "%n-%v" | sed -r '1s/.*//;2,$s/(.*)/ - \1/')
+    
+    # Getting the number of updates available
+    updatesNum=0
+    [ ! -z "$pacUpdates" ] && updatesNum=$((`echo "$pacUpdates" | wc -l` - 1))
+
+    # Show the number of updates available on conky or terminal
+    echo "( $updatesNum )"
+    
+    # If the system has any update, a notification will be show on desktop
+    [ $updatesNum -gt 0 ] && /usr/bin/notify-send -t 180000 -i dialog-info "$updateNotifyMessage $pacUpdates"
+}
+
+case "$1" in    
+    '-n')
+        showUpdatesNotification "$updatesMsg" ;;
+    '-sn')
+        checkUpdates
+        showUpdatesNotification "$updatesMsg" ;;
+    *)
+        usage
+esac
